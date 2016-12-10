@@ -1,0 +1,14 @@
+[package]
+name = "msp"
+version = "0.1.0"
+authors = ["Vadzim Dambrouski <pftbest@gmail.com>"]
+
+[dependencies]
+volatile-register = "0.1.2"
+
+[profile.dev]
+debug = true
+
+[profile.release]
+debug = true
+lto = true
