@@ -13,7 +13,7 @@ form [#38286](https://github.com/rust-lang/rust/pull/38286) and [#38240](https:/
 
 * Second issue is that rust compiler will pass the `-nodefaultlibs` flag to gcc by default, and for some reason (unknown to me) gcc will fail to emit startup code with this flag present. To fix this you should set `"no-default-libraries": false` option in json file for your target.
 
-* Third issue, well it is not an issue, just an inconvinience. I was using a custom rust compiler with patches mentioned above, and found out that `xargo` does not support custom compilers. So I had two options: either add `libcore` crate sources as a dependency in my `Cargo.toml`, or to compile `libcore` separately and put its binary into `sysroot`. I chose the latter case, because it allows me to use other crates like `volatile-register` without changing their source code.
+* Third issue, well it is not an issue, just an inconvenience. I was using a custom rust compiler with patches mentioned above, and found out that `xargo` does not support custom compilers. So I had two options: either add `libcore` crate sources as a dependency in my `Cargo.toml`, or to compile `libcore` separately and put its binary into `sysroot`. I chose the latter case, because it allows me to use other crates like `volatile-register` without changing their source code.
 
 ## Board
 
