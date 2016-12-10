@@ -5,7 +5,7 @@
 ## Compiling
 
 Unfortunately, it is not possible to build this project without patches
-form [#38116](https://github.com/rust-lang/rust/issues/38116) and [#38240](https://github.com/rust-lang/rust/pull/38240), so we need to wait until they land in nightly.
+form [#38286](https://github.com/rust-lang/rust/pull/38286) and [#38240](https://github.com/rust-lang/rust/pull/38240), so we need to wait until they land in nightly.
 
 ## Board
 
