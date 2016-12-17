@@ -5,12 +5,16 @@
   "features": "-ext",
   "llvm-target": "msp430",
   "max-atomic-width": 0,
-  "no-default-libraries": false,
   "no-integrated-as": true,
   "os": "none",
   "panic-strategy": "abort",
   "relocation-model": "static",
   "target-endian": "little",
   "target-pointer-width": "16",
-  "linker": "./msp-gcc.sh"
+  "linker": "./msp-gcc.sh",
+  "post-link-args": [
+    "-Lldscripts",
+    "-Tmsp430g2553.ld",
+    "-nostartfiles"
+  ]
 }

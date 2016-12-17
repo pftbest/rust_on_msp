@@ -10,5 +10,4 @@ volatile-register = "0.1.2"
 debug = true
 
 [profile.release]
-debug = true
 lto = true
