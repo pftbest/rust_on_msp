@@ -11,7 +11,7 @@ Tested using version `1.15.0-nightly (8f02c429a 2016-12-15)`
 Steps:
 * First, install `msp430-elf-gcc` compiler, and make sure it is in your `$PATH`.
  You can get it from [here](http://software-dl.ti.com/msp430/msp430_public_sw/mcu/msp430/MSPGCC/latest/index_FDS.html). 
-* Install nightly rust: `rustup default nightly`
+* Install nightly rust: `$ rustup default nightly`
 * Install xargo: `$ cargo install xargo`
 * Build the project: `$ make`
 * or you can build it using xargo directly (if you don't like `make`)
