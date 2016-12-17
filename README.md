@@ -6,28 +6,18 @@
 
 This project can be compiled using nightly rust and [xargo](https://github.com/japaric/xargo).
 
-Tested using version `1.15.0-nightly (8f02c429a 2016-12-15)`.
+Tested using version `1.15.0-nightly (8f02c429a 2016-12-15)`
 
 Steps:
-* First, install msp430-elf-gcc compiler, and make sure it is in your $PATH.
+* First, install `msp430-elf-gcc` compiler, and make sure it is in your `$PATH`.
  You can get it from [here](http://software-dl.ti.com/msp430/msp430_public_sw/mcu/msp430/MSPGCC/latest/index_FDS.html). 
-* Install nightly rust
-
-  `$ rustup default nightly`
-* Install xargo
-
-  `$ cargo install xargo`
-* Build the project using
-
-  `$ make`
-
+* Install nightly rust: `rustup default nightly`
+* Install xargo: `$ cargo install xargo`
+* Build the project: `$ make`
 * or you can build it using xargo directly (if you don't like `make`)
 
   `$ xargo build --release --target msp430g2553`
-
-* Flash the firmware using `mspdebug`
-
-  `$ make prog`
+* Flash the firmware using mspdebug: `$ make prog`
 
 ## How it works
 
@@ -50,7 +40,7 @@ Steps:
   is not possible to use interrupts yet (other than reset), because rust doesn't have a special 
   calling convention for MSP430 interrupts.
 
-## Proting to other boards and MCUs
+## Porting to other boards and MCUs
 
 To run this code on the other boards and MCUs, you need to change it in few places:
 * Get a linker script for your MCU from msp430-elf-gcc include directory, and place it
