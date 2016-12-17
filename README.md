@@ -16,7 +16,7 @@ Steps:
 * Build the project: `$ make`
 * or you can build it using xargo directly (if you don't like `make`)
 
-  `$ xargo build --release --target msp430g2553`
+  `$ xargo build --release --target msp430`
 * Flash the firmware using mspdebug: `$ make prog`
 
 ## How it works
@@ -44,10 +44,9 @@ Steps:
 
 To run this code on the other boards and MCUs, you need to change it in few places:
 * Get a linker script for your MCU from msp430-elf-gcc include directory, and place it
-  inside `ldscripts` folder.
-* Rename `msp430g2553.json` and modify it to point to the right liker script from step 1
+  inside `ldscripts` folder. (Don't forget to get `*_symbols.ld` one as well).
+* Modify `.cargo/config` file so it would point to your ld script from step 1.
 * Modify `msp-gcc.sh` so it would pass the right mcu name to the gcc.
-* Modify `DEVICE` variable inside a Makefile.
 
 ## Board
 
