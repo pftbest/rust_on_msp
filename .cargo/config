@@ -1,11 +1,6 @@
 [target.msp430]
 rustflags = [
-  "-C",
-  "linker=./msp-gcc.sh",
-  "-C",
-  "link-arg=-Lldscripts",
-  "-C",
-  "link-arg=-Tmsp430g2553.ld",
-  "-C",
-  "link-arg=-nostartfiles",
+    "-C", "link-arg=-Tmsp430g2553.ld",
+    "-C", "link-arg=-mmcu=msp430g2553",
+    "-C", "link-arg=-nostartfiles",
 ]
