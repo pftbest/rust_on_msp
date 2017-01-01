@@ -6,7 +6,7 @@
 
 This project can be compiled using nightly rust and [xargo](https://github.com/japaric/xargo).
 
-Tested using version `1.15.0-nightly (8f02c429a 2016-12-15)`
+Tested using version `rustc 1.16.0-nightly (4ecc85beb 2016-12-28)`
 
 Steps:
 * First, install `msp430-elf-gcc` compiler, and make sure it is in your `$PATH`.
@@ -21,13 +21,6 @@ Steps:
 
 ## How it works
 
-* One of the issues you may run into is incompatibility between MSP430 and
-  MSP430X. When `rustc` compiles code it does not pass `-mmcu` flag to the gcc,
-  so gcc choses default ISA. For `msp430-elf-gcc` it is MSP430X, and it is not 
-  what you want for `msp430g2553` MCU. To work around this, you should create 
-  a *shim* compiler like [`msp-gcc.sh`](https://github.com/pftbest/rust_on_msp/blob/master/msp-gcc.sh)
-  that will pass the necessary flags to gcc.
-
 * This project is does not use default startup code from gcc, so a reset handler should be defined like this:
   ```rust
   #[no_mangle]
@@ -38,15 +31,17 @@ Steps:
   `__interrupt_vector_reset` and is pointing to `main` function, so it will be called on reset.
   Other interrupts may be defined the same way for example `__interrupt_vector_timer0_a0`, but it
   is not possible to use interrupts yet (other than reset), because rust doesn't have a special 
-  calling convention for MSP430 interrupts.
+  calling convention for MSP430 interrupts. A workaround would be to use `#[naked]` functions.
+  You can follow the discussion here: [#38465](https://github.com/rust-lang/rust/pull/38465)
 
 ## Porting to other boards and MCUs
 
 To run this code on the other boards and MCUs, you need to change it in few places:
 * Get a linker script for your MCU from msp430-elf-gcc include directory, and place it
   inside `ldscripts` folder. (Don't forget to get `*_symbols.ld` one as well).
-* Modify `.cargo/config` file so it would point to your ld script from step 1.
-* Modify `msp-gcc.sh` so it would pass the right mcu name to the gcc.
+* Modify `.cargo/config` file so it would point to your ld script from step 1 and change
+  linker flags to match your MCU name.
+* Modify `build.rs` script so it would copy the right ld script from step 1.
 
 ## Board
 
