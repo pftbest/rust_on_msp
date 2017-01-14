@@ -11,7 +11,13 @@ Tested using version `rustc 1.16.0-nightly (4ecc85beb 2016-12-28)`
 Steps:
 * First, install `msp430-elf-gcc` compiler, and make sure it is in your `$PATH`.
  You can get it from [here](http://software-dl.ti.com/msp430/msp430_public_sw/mcu/msp430/MSPGCC/latest/index_FDS.html). 
-* Install nightly rust: `$ rustup default nightly`
+* ~~Install nightly rust: `$ rustup default nightly`~~
+* Until issue [#38824](https://github.com/rust-lang/rust/issues/38824) is fixed, we need to use older version of nightly compiler. You can get it using this commands:
+```
+rustup default nightly-2016-12-29
+rustup override set nightly-2016-12-29
+rustup component add rust-src
+```
 * Install xargo: `$ cargo install xargo`
 * Build the project: `$ make`
 * or you can build it using xargo directly (if you don't like `make`)
@@ -22,11 +28,11 @@ Steps:
 ## How it works
 
 * This project is does not use default startup code from gcc, so a reset handler should be defined like this:
-  ```rust
-  #[no_mangle]
-  #[link_section = "__interrupt_vector_reset"]
-  pub static RESET_VECTOR: unsafe extern "C" fn() -> ! = main;
-  ```
+```rust
+#[no_mangle]
+#[link_section = "__interrupt_vector_reset"]
+pub static RESET_VECTOR: unsafe extern "C" fn() -> ! = main;
+```
   RESET_VECTOR is just a function pointer that gets placed inside a special section called
   `__interrupt_vector_reset` and is pointing to `main` function, so it will be called on reset.
   Other interrupts may be defined the same way for example `__interrupt_vector_timer0_a0`, but it
