@@ -6,11 +6,11 @@
 
 This project can be compiled using nightly rust and [xargo](https://github.com/japaric/xargo).
 
-Tested using version `rustc 1.17.0-nightly (0aeb9c129 2017-03-15)`
+Tested using version `rustc 1.19.0-nightly (5de00925b 2017-05-29)`
 
 Steps:
 * First, install `msp430-elf-gcc` compiler, and make sure it is in your `$PATH`.
- You can get it from [here](http://software-dl.ti.com/msp430/msp430_public_sw/mcu/msp430/MSPGCC/latest/index_FDS.html). 
+ You can get it from [here](http://software-dl.ti.com/msp430/msp430_public_sw/mcu/msp430/MSPGCC/latest/index_FDS.html).
 * Install nightly rust: `$ rustup default nightly`
 * Install xargo: `$ cargo install xargo`
 * Build the project: `$ make`
@@ -23,22 +23,26 @@ Steps:
 
 This project is does not use default startup code from gcc, so a reset handler should be defined like this:
 ```rust
-#[no_mangle]
+#[used]
 #[link_section = "__interrupt_vector_reset"]
-pub static RESET_VECTOR: unsafe extern "msp430-interrupt" fn() = reset_handler;
+static RESET_VECTOR: unsafe extern "msp430-interrupt" fn() = reset_handler;
 ```
 RESET_VECTOR is just a function pointer that gets placed inside a special section
 called `__interrupt_vector_reset` and is pointing to `reset_handler` function,
 so it will be called on reset.
 
-Instead of writing all this code by hand, you may want to use `define_interrupt!`
-macro. It takes 3 arguments, first - some unique name, second - the name of a section for the interrupt you want (you can look up the names in your linker
-script), and the third argument is a block of code that will be executed when
-interrupt fires. For example:
-```rust
-define_interrupt!(TIM0_A0_VECTOR, "__interrupt_vector_timer0_a0", {
-    // do something here
-});
+`reset_handler` function is defined in `global_asm!` block because it needs to
+set stack pointer as it's first instruction during startup. Handlers for other
+interrupts doesn't need this, so they can be written in rust. For example
+handler for timer_a0 interrupt can be defined like this:
+```Rust
+#[used]
+#[link_section = "__interrupt_vector_timer0_a0"]
+static TIM0_VECTOR: unsafe extern "msp430-interrupt" fn() = timer0_handler;
+
+unsafe extern "msp430-interrupt" fn timer0_handler() {
+    // you can do something here
+}
 ```
 
 ## Porting to other boards and MCUs

@@ -1,30 +1,37 @@
 #![no_std]
 #![no_main]
 #![feature(asm)]
+#![feature(used)]
 #![feature(lang_items)]
+#![feature(global_asm)]
 #![feature(abi_msp430_interrupt)]
 
 extern crate volatile_register;
 use volatile_register::RW;
 
-macro_rules! define_interrupt {
-    ($name:ident, $section:tt, $code:block) => (
-        #[no_mangle]
-        #[link_section = $section]
-        pub static $name: unsafe extern "msp430-interrupt" fn() = {
-            unsafe extern "msp430-interrupt" fn handler() $code;
-            handler
-        };
-    )
+global_asm!(r#"
+    .globl reset_handler
+reset_handler:
+    mov #__stack, r1
+    br #main
+    br #reset_handler
+"#);
+
+#[used]
+#[link_section = "__interrupt_vector_reset"]
+static RESET_VECTOR: unsafe extern "msp430-interrupt" fn() = reset_handler;
+
+extern "msp430-interrupt" {
+    fn reset_handler();
 }
 
-define_interrupt!(RESET_VECTOR, "__interrupt_vector_reset", {
-    main();
-});
+#[used]
+#[link_section = "__interrupt_vector_timer0_a0"]
+static TIM0_VECTOR: unsafe extern "msp430-interrupt" fn() = timer0_handler;
 
-define_interrupt!(TIM0_VECTOR, "__interrupt_vector_timer0_a0", {
-    // do nothing
-});
+unsafe extern "msp430-interrupt" fn timer0_handler() {
+    // you can do something here
+}
 
 extern "C" {
     static mut WDTCTL: RW<u16>;
@@ -32,7 +39,8 @@ extern "C" {
     static mut P1OUT: RW<u8>;
 }
 
-unsafe fn main() -> ! {
+#[no_mangle]
+pub unsafe extern "C" fn main() -> ! {
     WDTCTL.write(0x5A00 + 0x80);
     P1DIR.write(0b0100_0001);
     P1OUT.write(0x01);
@@ -42,17 +50,16 @@ unsafe fn main() -> ! {
     }
 }
 
-fn delay(mut n: u16) -> u16 {
-    unsafe {
-        asm! {
-            "1: \n dec $0 \n jne 1b" : "+r" (n) ::: "volatile"
-        }
-    }
-    n
+unsafe fn delay(n: u16) {
+    asm!(r#"
+1:
+    dec $0
+    jne 1b
+    "# :: "{r12}"(n) : "r12" : "volatile");
 }
 
-#[no_mangle]
+#[used]
 #[lang = "panic_fmt"]
-pub extern "C" fn panic_fmt() -> ! {
+extern "C" fn panic_fmt() -> ! {
     loop {}
 }
