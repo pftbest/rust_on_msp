@@ -14,7 +14,6 @@ global_asm!(r#"
 reset_handler:
     mov #__stack, r1
     br #main
-    br #reset_handler
 "#);
 
 #[used]
