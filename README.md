@@ -16,7 +16,7 @@ There is also a real firmware that is using this framework: [AT2XT].
 [crates.io]: https://crates.io/keywords/msp430
 [msp430-quickstart]: https://github.com/japaric/msp430-quickstart
 [msp430]: https://docs.rs/msp430/0.1.0/msp430
-[msp430-rt]: https://docs.rs/msp430/0.1.0/msp430-rt
+[msp430-rt]: https://docs.rs/msp430-rt/0.1.0/msp430_rt
 [cortex-m]: https://github.com/japaric/cortex-m
 [cortex-m-rt]: https://github.com/japaric/cortex-m-rt
 [svd2rust]: https://github.com/japaric/svd2rust
